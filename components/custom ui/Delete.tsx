@@ -17,22 +17,25 @@ import { Button } from "../ui/button";
 import toast from "react-hot-toast";
 
 interface DeleteProps {
+  item: string;
   id: string;
 }
 
-const Delete: React.FC<DeleteProps> = ({ id }) => {
+const Delete: React.FC<DeleteProps> = ({ item, id }) => {
   const [loading, setLoading] = useState(false);
 
   const onDelete = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/collections/${id}`, {
+      const itemType = item === "product" ? "products" : "collections";
+      const res = await fetch(`/api/${itemType}/${id}`, {
         method: "DELETE",
       });
 
       if (res.ok) {
-        window.location.href = "/collections";
-        toast.success("Colección eliminada!");
+        window.location.href = `/${itemType}`;
+        const message = item === "product" ? "Producto!" : "Colección!";
+        toast.success(`${message} eliminado correctamente.`);
         setLoading(false);
       }
     } catch (error) {
@@ -55,7 +58,7 @@ const Delete: React.FC<DeleteProps> = ({ id }) => {
           </AlertDialogTitle>
           <AlertDialogDescription>
             Esta acción no se puede deshacer. Esto va a borrar permanentemente
-            tu collection.
+            tu {item === "product" ? "producto" : "colección"}.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
