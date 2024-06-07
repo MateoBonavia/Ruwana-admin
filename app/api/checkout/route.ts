@@ -29,6 +29,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
       0
     );
 
+    const productsId = cartItems.map((item: any) => item.item.id);
+
     const preference = await new Preference(client).create({
       body: {
         items: [
@@ -40,6 +42,29 @@ export async function POST(req: NextRequest, res: NextResponse) {
             unit_price: total,
           },
         ],
+        payer: {
+          email: customer.email,
+        },
+        metadata: {
+          name: customer.name,
+          email: customer.email,
+          clerkId: customer.clerkId,
+          products: cartItems.map((product: any) => ({
+            productId: product.item.id,
+            quantity: product.quantity,
+            price: product.item.price,
+            ...(product.size && { size: product.size }),
+            ...(product.color && { color: product.color }),
+          })),
+        },
+        back_urls: {
+          // success: `${process.env.ECOMMERCE_STORE_URL}/success`,
+          // failure: `${process.env.ECOMMERCE_STORE_URL}/failure`,
+          // pending: `${process.env.ECOMMERCE_STORE_URL}/pending`,
+          success: "https://www.google.com/?hl=es",
+          failure: "https://www.google.com/?hl=es",
+          pending: "https://www.google.com/?hl=es",
+        },
       },
     });
 
@@ -47,7 +72,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     // En el return mandamos lo necesario para MercadoPago y en el header el cors para evitar problemas. ⬇
     //
     return NextResponse.json(preference, { status: 200, headers: corsHeaders });
-    // return new NextResponse(result.id, { status: 200, headers: corsHeaders });
   } catch (error) {
     console.log("[checkout_POST", error);
     return new NextResponse("Internal Server Error", {

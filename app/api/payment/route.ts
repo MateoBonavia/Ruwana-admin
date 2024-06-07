@@ -1,17 +1,72 @@
+import Customer from "@/lib/models/Customer";
+import Order from "@/lib/models/Order";
+import { connectToDB } from "@/lib/mongoDB";
 import { MercadoPagoConfig, Payment } from "mercadopago";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN!,
 });
 
-export async function POST(req: NextRequest) {
-  const body = await req
-    .json()
-    .then((data) => data as { data: { id: string } });
+export const POST = async (req: NextRequest) => {
+  try {
+    const body = await req
+      .json()
+      .then((data) => data as { data: { id: string } });
+    // const signature = req.headers.get("x-mp-signature") as string;
 
-  const payment = await new Payment(client).get({ id: body.data.id });
-  console.log(payment);
+    const payment = await new Payment(client).get({ id: body.data.id });
+    console.log("payment", payment);
 
-  return Response.json({ success: true });
-}
+    if (payment) {
+      const customerInfo = {
+        clerkId: payment?.metadata.clerk_id,
+        name: payment?.metadata.name,
+        email: payment?.metadata.email,
+      };
+      console.log("customerInfo", customerInfo);
+
+      // En un futuro mandar por metadata o mediante otro medio datos de envió ⬇
+      // const shippingAddress = {};
+
+      // Guardamos el ID de la orden ⬇
+      const orderId = payment?.id;
+
+      // Guardamos los datos el/los producto/s ⬇
+      const orderItems = payment?.metadata.products.map((product: any) => ({
+        id: product.productId,
+        color: product.color || "N/A",
+        size: product.size || "N/A",
+        quantity: product.quantity,
+      }));
+
+      await connectToDB();
+
+      const newOrder = new Order({
+        customerClerkId: customerInfo.clerkId,
+        products: orderItems,
+        // shippingAddress: {},
+        totalAmount: payment?.transaction_amount,
+      });
+
+      await newOrder.save();
+
+      let customer = await Customer.findOne({ clerkId: customerInfo.clerkId });
+
+      if (customer) {
+        customer.orders.push(newOrder._id);
+      } else {
+        customer = new Customer({
+          ...customerInfo,
+          orders: [newOrder._id],
+        });
+      }
+      await customer.save();
+    }
+
+    return Response.json("Orden creada", { status: 200 });
+  } catch (error) {
+    console.log("[payment_POST]", error);
+    return new NextResponse("Failed to create the order", { status: 500 });
+  }
+};
