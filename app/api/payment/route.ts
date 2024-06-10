@@ -16,7 +16,6 @@ export const POST = async (req: NextRequest) => {
     // const signature = req.headers.get("x-mp-signature") as string;
 
     const payment = await new Payment(client).get({ id: body.data.id });
-    console.log("payment", payment);
 
     if (payment) {
       const customerInfo = {
@@ -24,7 +23,6 @@ export const POST = async (req: NextRequest) => {
         name: payment?.metadata.name,
         email: payment?.metadata.email,
       };
-      console.log("customerInfo", customerInfo);
 
       // En un futuro mandar por metadata o mediante otro medio datos de envió ⬇
       // const shippingAddress = {};
@@ -33,8 +31,9 @@ export const POST = async (req: NextRequest) => {
       const orderId = payment?.id;
 
       // Guardamos los datos el/los producto/s ⬇
+      console.log(payment?.metadata.products[0].product_id);
       const orderItems = payment?.metadata.products.map((product: any) => ({
-        id: product.productId,
+        product: product.product_id,
         color: product.color || "N/A",
         size: product.size || "N/A",
         quantity: product.quantity,
