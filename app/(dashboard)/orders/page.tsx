@@ -1,5 +1,5 @@
 import { DataTable } from "@/components/custom ui/DataTable";
-import { columns } from "@/components/orders/OrderCollumns";
+import { columns } from "@/components/orders/OrderColumns";
 import { Separator } from "@/components/ui/separator";
 
 const Orders = async () => {
@@ -8,7 +8,7 @@ const Orders = async () => {
 
   return (
     <div className="px-10 py-5">
-      <p className="text-heading2-bold">Orders</p>
+      <p className="text-heading2-bold">Ordenes</p>
       <Separator className="bg-grey-1 my-5" />
 
       <DataTable columns={columns} data={orders} searchKey="_id" />

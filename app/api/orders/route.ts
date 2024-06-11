@@ -10,6 +10,7 @@ export const GET = async (req: NextRequest) => {
     await connectToDB();
 
     const orders = await Order.find().sort({ createdAt: "desc" });
+    console.log(orders);
 
     const orderDetails = await Promise.all(
       orders.map(async (order) => {
