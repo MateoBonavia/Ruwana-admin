@@ -4,6 +4,12 @@ import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": `${process.env.ECOMMERCE_STORE_URL}`,
+  "Access-Control-Allow-Methods": "GET",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
 export const GET = async (
   req: NextRequest,
   { params }: { params: { productId: string } }
@@ -23,7 +29,7 @@ export const GET = async (
       );
     }
 
-    return NextResponse.json(product, { status: 200 });
+    return NextResponse.json(product, { status: 200, headers: corsHeaders });
   } catch (error) {
     console.log("[productId_GET]", error);
     return new NextResponse("Internal error", { status: 500 });
