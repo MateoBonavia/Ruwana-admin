@@ -56,12 +56,12 @@ export async function POST(req: NextRequest, res: NextResponse) {
           })),
         },
         back_urls: {
-          // success: `${process.env.ECOMMERCE_STORE_URL}/success`,
-          // failure: `${process.env.ECOMMERCE_STORE_URL}/failure`,
-          // pending: `${process.env.ECOMMERCE_STORE_URL}/pending`,
-          success: "https://www.google.com/?hl=es",
-          failure: "https://www.google.com/?hl=es",
-          pending: "https://www.google.com/?hl=es",
+          success: `${process.env.ECOMMERCE_STORE_URL}/success`,
+          failure: `${process.env.ECOMMERCE_STORE_URL}/failure`,
+          pending: `${process.env.ECOMMERCE_STORE_URL}/pending`,
+          // success: "https://www.google.com/?hl=es",
+          // failure: "https://www.google.com/?hl=es",
+          // pending: "https://www.google.com/?hl=es",
         },
       },
     });
