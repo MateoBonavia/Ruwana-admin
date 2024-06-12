@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 // SDK de Mercado Pago
-import { MercadoPagoConfig, Preference } from "mercadopago";
+import { Preference } from "mercadopago";
+import { client } from "@/lib/mercadopago";
 // Agrega credenciales
-const client = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN!,
-});
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
