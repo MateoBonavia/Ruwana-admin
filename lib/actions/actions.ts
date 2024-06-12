@@ -1,6 +1,6 @@
-import Customer from "../models/Customer";
-import Order from "../models/Order";
 import { connectToDB } from "../mongoDB";
+import Order from "../models/Order";
+import Customer from "../models/Customer";
 
 export const getTotalSales = async () => {
   await connectToDB();
@@ -16,7 +16,7 @@ export const getTotalSales = async () => {
 
 export const getTotalCustomers = async () => {
   await connectToDB();
-  const customers = await Customer.find();
+  const customers = await Customer.find({});
   const totalCustomers = customers.length;
   return totalCustomers;
 };
