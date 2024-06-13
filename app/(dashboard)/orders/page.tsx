@@ -2,7 +2,10 @@
 import { DataTable } from "@/components/custom ui/DataTable";
 import Loader from "@/components/custom ui/Loader";
 import { columns } from "@/components/orders/OrderColumns";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { exportOrdersToExcel } from "@/utils/exportToExcel";
+import { Download } from "lucide-react";
 
 import { useEffect, useState } from "react";
 
@@ -34,6 +37,13 @@ const Orders = () => {
       <Separator className="bg-grey-1 my-5" />
 
       <DataTable columns={columns} data={orders} searchKey="_id" />
+      <Button
+        className="bg-green-1 text-white"
+        onClick={() => exportOrdersToExcel(orders)}
+      >
+        Excel
+        <Download className="h-4 w-4 ml-2" />
+      </Button>
     </div>
   );
 };
