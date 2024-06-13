@@ -8,8 +8,11 @@ import { exportOrdersToExcel } from "@/utils/exportToExcel";
 import { Download } from "lucide-react";
 
 import { useEffect, useState } from "react";
+import DatePickerWithRange from "@/components/custom ui/DatePickerWithRange";
+import { DateRange } from "react-day-picker";
 
 const Orders = () => {
+  const [date, setDate] = useState<DateRange | undefined>();
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
 
@@ -29,6 +32,18 @@ const Orders = () => {
     getOrders();
   }, []);
 
+  const onDownloadExcel = () => {
+    if (!date) {
+      // exportOrdersToExcel(orders);
+    } else {
+      const filteredOrders = orders.filter((order: any) => {
+        return order.createdAt >= date?.from && order.createdAt <= date?.to;
+      });
+
+      // exportOrdersToExcel(filteredOrders);
+    }
+  };
+
   return loading ? (
     <Loader />
   ) : (
@@ -37,13 +52,15 @@ const Orders = () => {
       <Separator className="bg-grey-1 my-5" />
 
       <DataTable columns={columns} data={orders} searchKey="_id" />
-      <Button
-        className="bg-green-1 text-white"
-        onClick={() => exportOrdersToExcel(orders)}
-      >
-        Excel
-        <Download className="h-4 w-4 ml-2" />
-      </Button>
+
+      <div className="flex gap-2">
+        <Button className="bg-green-1 text-white" onClick={onDownloadExcel}>
+          Excel
+          <Download className="h-4 w-4 ml-2" />
+        </Button>
+
+        <DatePickerWithRange date={date} setDate={setDate} />
+      </div>
     </div>
   );
 };
