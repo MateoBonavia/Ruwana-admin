@@ -1,7 +1,8 @@
+import GeneralOrderForm from "@/components/generalOrders/GeneralOrderForm";
 import React from "react";
 
 const CreateGeneralOrder = () => {
-  return <div>CreateGeneralOrder</div>;
+  return <GeneralOrderForm />;
 };
 
 export default CreateGeneralOrder;
