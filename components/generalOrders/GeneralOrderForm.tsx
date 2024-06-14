@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
 
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -19,15 +18,14 @@ import {
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import Delete from "../custom ui/Delete";
-import Loader from "../custom ui/Loader";
 
 const formSchema = z.object({
-  name: z.string().min(2).max(20),
-  product: z.string().min(2).max(30),
+  costumer: z.string().min(2).max(20),
+  products: z.string().min(2).max(30),
   color: z.string().min(2).max(10),
   size: z.string().min(2).max(10),
-  quantity: z.number().int().positive(),
-  totalAmount: z.number().int().positive(),
+  quantity: z.coerce.number().min(1),
+  totalAmount: z.coerce.number().min(1),
 });
 
 interface GeneralOrderFormProps {
@@ -40,8 +38,8 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
   const initializeDefaultValues = (initialData: GeneralOrderType) => {
     if (initialData) {
       return {
-        name: initialData.name,
-        product: initialData.product,
+        costumer: initialData.costumer,
+        products: initialData.products,
         color: initialData.color,
         size: initialData.size,
         quantity: initialData.quantity,
@@ -49,8 +47,8 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
       };
     }
     return {
-      name: "",
-      product: "",
+      costumer: "",
+      products: "",
       color: "",
       size: "",
       quantity: 0,
@@ -89,6 +87,7 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
         );
         window.location.href = "/generalOrders";
         router.push("/generalOrders");
+        console.log(res);
       }
     } catch (error) {
       console.log("[GeneralOrders_POST]", error);
@@ -113,7 +112,7 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="name"
+            name="costumer"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Cliente</FormLabel>
@@ -131,7 +130,7 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
 
           <FormField
             control={form.control}
-            name="product"
+            name="products"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Producto</FormLabel>
@@ -192,6 +191,7 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
                   <FormLabel>Cantidad</FormLabel>
                   <FormControl>
                     <Input
+                      type="number"
                       placeholder="Cantidad"
                       {...field}
                       onKeyDown={handleKeyPress}
@@ -210,6 +210,7 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
                   <FormLabel>Precio total ($)</FormLabel>
                   <FormControl>
                     <Input
+                      type="number"
                       placeholder="Precio total"
                       {...field}
                       onKeyDown={handleKeyPress}

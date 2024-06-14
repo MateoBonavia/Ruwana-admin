@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const generalOrdersSchema = new mongoose.Schema({
-  name: String,
-  product: String,
+  costumer: String,
+  products: String,
   color: String,
   size: String,
   quantity: Number,
