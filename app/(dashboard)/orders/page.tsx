@@ -32,16 +32,27 @@ const Orders = () => {
     getOrders();
   }, []);
 
-  const onDownloadExcel = () => {
-    if (!date) {
-      // exportOrdersToExcel(orders);
-    } else {
-      const filteredOrders = orders.filter((order: any) => {
-        return order.createdAt >= date?.from && order.createdAt <= date?.to;
-      });
+  const parseOrderDate = (dateString: string) => {
+    // Removemos el sufijo "th" y convertimos la cadena en un formato compatible con Date.
+    const cleanDateString = dateString.replace(/(\d+)(th|st|nd|rd)/, "$1");
+    return new Date(cleanDateString);
+  };
 
-      // exportOrdersToExcel(filteredOrders);
+  const onDownloadExcel = () => {
+    if (!date?.from || !date?.to) {
+      exportOrdersToExcel(orders);
+      return;
     }
+
+    const fromDate = new Date(date.from);
+    const toDate = new Date(date.to);
+
+    const filteredOrders = orders.filter((order: any) => {
+      const orderDate = parseOrderDate(order.createdAt);
+      return orderDate >= fromDate && orderDate <= toDate;
+    });
+
+    exportOrdersToExcel(filteredOrders);
   };
 
   return loading ? (
