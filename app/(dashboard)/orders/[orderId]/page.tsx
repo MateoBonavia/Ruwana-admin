@@ -1,13 +1,36 @@
+"use client";
 import { DataTable } from "@/components/custom ui/DataTable";
+import Loader from "@/components/custom ui/Loader";
 import { columns } from "@/components/orderItems/OrderItemsColumns";
+import { Button } from "@/components/ui/button";
+import { exportOrdersToExcel } from "@/utils/exportToExcel";
+import { Download } from "lucide-react";
+import { useEffect, useState } from "react";
 
-const OrderDetails = async ({ params }: { params: { orderId: string } }) => {
-  const res = await fetch(
-    `${process.env.ADMIN_DASHBOARD_URL}/api/orders/${params.orderId}`
-  );
-  const { orderDetails, customer } = await res.json();
+const OrderDetails = ({ params }: { params: { orderId: string } }) => {
+  const [loading, setLoading] = useState(true);
+  const [orderDetails, setOrderDetails] = useState<any>();
+  const [customer, setCustomer] = useState<any>();
 
-  return (
+  const getDate = async () => {
+    try {
+      const res = await fetch(`/api/orders/${params.orderId}`);
+      const { orderDetails, customer } = await res.json();
+      setOrderDetails(orderDetails);
+      setCustomer(customer);
+      setLoading(false);
+    } catch (error) {
+      console.log("[orderDetails_GET]", error);
+    }
+  };
+
+  useEffect(() => {
+    getDate();
+  }, [params.orderId]);
+
+  return loading ? (
+    <Loader />
+  ) : (
     <div className="flex flex-col p-10 gap-5">
       <p className="text-base-bold">
         Orden ID: <span className="text-base-medium">{orderDetails._id}</span>
@@ -24,6 +47,14 @@ const OrderDetails = async ({ params }: { params: { orderId: string } }) => {
         data={orderDetails.products}
         searchKey="product"
       />
+
+      <Button
+        className="bg-green-1 text-white"
+        onClick={() => exportOrdersToExcel([orderDetails])}
+      >
+        Excel
+        <Download className="h-4 w-4 ml-2" />
+      </Button>
     </div>
   );
 };
