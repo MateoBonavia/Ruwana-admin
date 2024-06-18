@@ -76,7 +76,6 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
       const url = initialData
         ? `/api/generalOrders/${initialData._id}`
         : "/api/generalOrders";
-      console.log(values);
       const res = await fetch(url, {
         method: initialData ? "PUT" : "POST",
         body: JSON.stringify(values),
@@ -88,7 +87,6 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
         );
         window.location.href = "/generalOrders";
         router.push("/generalOrders");
-        console.log(res);
       }
     } catch (error) {
       console.log("[GeneralOrders_POST]", error);

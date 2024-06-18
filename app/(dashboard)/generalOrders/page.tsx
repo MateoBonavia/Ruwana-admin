@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import DatePickerWithRange from "@/components/custom ui/DatePickerWithRange";
 import { DateRange } from "react-day-picker";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 
 const GeneralOrders = () => {
   const router = useRouter();
@@ -25,7 +26,12 @@ const GeneralOrders = () => {
       const res = await fetch("/api/generalOrders");
       const orders = await res.json();
 
-      setOrders(orders);
+      const formattedOrders = orders.map((order: any) => ({
+        ...order,
+        createdAt: format(new Date(order.createdAt), "MMM dd, yyyy"),
+      }));
+
+      setOrders(formattedOrders);
       setLoading(false);
     } catch (error) {
       console.log("[orders_GET]", error);
