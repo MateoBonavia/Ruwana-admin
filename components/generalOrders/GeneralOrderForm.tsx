@@ -20,11 +20,11 @@ import toast from "react-hot-toast";
 import Delete from "../custom ui/Delete";
 
 const formSchema = z.object({
-  costumer: z.string().min(2).max(20),
-  products: z.string().min(2).max(30),
+  customer: z.string().min(2).max(20),
+  productsName: z.string().min(2).max(30),
   color: z.string().min(2).max(10),
   size: z.string().min(2).max(10),
-  quantity: z.coerce.number().min(1),
+  products: z.coerce.number().min(1),
   totalAmount: z.coerce.number().min(1),
 });
 
@@ -38,20 +38,20 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
   const initializeDefaultValues = (initialData: GeneralOrderType) => {
     if (initialData) {
       return {
-        costumer: initialData.costumer,
-        products: initialData.products,
+        customer: initialData.customer,
+        productsName: initialData.productsName,
         color: initialData.color,
         size: initialData.size,
-        quantity: initialData.quantity,
+        products: initialData.products,
         totalAmount: initialData.totalAmount,
       };
     }
     return {
-      costumer: "",
-      products: "",
+      customer: "",
+      productsName: "",
       color: "",
       size: "",
-      quantity: 0,
+      products: 0,
       totalAmount: 0,
     };
   };
@@ -76,6 +76,7 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
       const url = initialData
         ? `/api/generalOrders/${initialData._id}`
         : "/api/generalOrders";
+      console.log(values);
       const res = await fetch(url, {
         method: initialData ? "PUT" : "POST",
         body: JSON.stringify(values),
@@ -112,7 +113,7 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="costumer"
+            name="customer"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Cliente</FormLabel>
@@ -130,7 +131,7 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
 
           <FormField
             control={form.control}
-            name="products"
+            name="productsName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Producto</FormLabel>
@@ -185,7 +186,7 @@ const GeneralOrderForm: React.FC<GeneralOrderFormProps> = ({ initialData }) => {
           <div className="md:grid md:grid-cols-2 gap-8">
             <FormField
               control={form.control}
-              name="quantity"
+              name="products"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Cantidad</FormLabel>

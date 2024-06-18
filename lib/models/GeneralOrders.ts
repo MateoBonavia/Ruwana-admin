@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const generalOrdersSchema = new mongoose.Schema({
-  costumer: String,
-  products: String,
+  customer: String,
+  productsName: String,
   color: String,
   size: String,
-  quantity: Number,
+  products: Number,
   totalAmount: Number,
   createdAt: {
     type: Date,

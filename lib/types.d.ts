@@ -24,11 +24,11 @@ type ProductType = {
 
 type GeneralOrderType = {
   _id: string;
-  costumer: string;
-  products: string;
+  customer: string;
+  productsName: string;
   color: string;
   size: string;
-  quantity: number;
+  products: number;
   totalAmount: number;
   createdAt: string;
 };

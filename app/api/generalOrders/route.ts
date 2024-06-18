@@ -6,25 +6,26 @@ export const POST = async (req: NextRequest) => {
   try {
     await connectToDB();
 
-    const { costumer, products, color, size, quantity, totalAmount } =
+    const { customer, productsName, color, size, products, totalAmount } =
       await req.json();
+
     if (
-      !costumer ||
-      !products ||
+      !customer ||
+      !productsName ||
       !color ||
       !size ||
-      !quantity ||
+      !products ||
       !totalAmount
     ) {
       return new NextResponse("Missing Fields", { status: 400 });
     }
 
     const newOrder = await GeneralOrders.create({
-      costumer,
-      products,
+      customer,
+      productsName,
       color,
       size,
-      quantity,
+      products,
       totalAmount,
     });
 
