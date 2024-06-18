@@ -2,7 +2,7 @@
 
 import { DataTable } from "@/components/custom ui/DataTable";
 import Loader from "@/components/custom ui/Loader";
-import { columns } from "@/components/orders/OrderColumns";
+import { columns } from "@/components/generalOrders/GeneralOrderColumns";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { exportOrdersToExcel } from "@/utils/exportToExcel";
