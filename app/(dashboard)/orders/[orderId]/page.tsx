@@ -42,6 +42,19 @@ const OrderDetails = ({ params }: { params: { orderId: string } }) => {
         Precio:{" "}
         <span className="text-base-medium">${orderDetails.totalAmount}</span>
       </p>
+      <p className="text-base-bold">
+        Envió:
+        <span className="text-base-medium">{orderDetails.shippingAddress}</span>
+      </p>
+      {orderDetails.shippingComments && (
+        <p className="text-base-bold">
+          Comentarios:
+          <span className="text-base-medium">
+            ${orderDetails.shippingComments}
+          </span>
+        </p>
+      )}
+
       <DataTable
         columns={columns}
         data={orderDetails.products}

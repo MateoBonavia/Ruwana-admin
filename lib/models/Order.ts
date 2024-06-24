@@ -13,14 +13,11 @@ const orderSchema = new mongoose.Schema({
       quantity: Number,
     },
   ],
-  // shippingAddress: {
-  //   street: String,
-  //   city: String,
-  //   state: String,
-  //   postalCode: String,
-  //   country: String,
-  // },
-  // shippingRate: String,
+  shippingAddress: String,
+  shippingComments: {
+    type: String,
+    required: false,
+  },
   totalAmount: Number,
   createdAt: {
     type: Date,

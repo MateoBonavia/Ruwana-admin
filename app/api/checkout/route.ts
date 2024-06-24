@@ -18,7 +18,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   try {
     //
     // Función para el checkout en MercadoPago. Guardar clerkId para poder obtener info del cliente ⬆
-    const { cartItems, customer } = await req.json();
+    const { cartItems, customer, shippingData } = await req.json();
     // console.log(cartItems, customer);
 
     const total = cartItems.reduce(
@@ -54,6 +54,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
             ...(product.size && { size: product.size }),
             ...(product.color && { color: product.color }),
           })),
+          shippingAddress: shippingData.fullAddress,
+          shippingComments: shippingData.comments,
         },
         back_urls: {
           success: `${process.env.ECOMMERCE_STORE_URL}/payment_success`,
