@@ -1,28 +1,37 @@
 "use client";
+
 import { DataTable } from "@/components/custom ui/DataTable";
 import Loader from "@/components/custom ui/Loader";
-import { columns } from "@/components/orders/OrderColumns";
+import { columns } from "@/components/generalOrders/GeneralOrderColumns";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { exportOrdersToExcel } from "@/utils/exportToExcel";
-import { Download } from "lucide-react";
+import { Download, Plus } from "lucide-react";
 
 import { useEffect, useState } from "react";
 import DatePickerWithRange from "@/components/custom ui/DatePickerWithRange";
 import { DateRange } from "react-day-picker";
+import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 
-const Orders = () => {
+const GeneralOrders = () => {
+  const router = useRouter();
+
   const [date, setDate] = useState<DateRange | undefined>();
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
 
   const getOrders = async () => {
     try {
-      const res = await fetch("/api/orders");
+      const res = await fetch("/api/generalOrders");
       const orders = await res.json();
 
-      setOrders(orders);
+      const formattedOrders = orders.map((order: any) => ({
+        ...order,
+        createdAt: format(new Date(order.createdAt), "MMM dd, yyyy"),
+      }));
+
+      setOrders(formattedOrders);
       setLoading(false);
     } catch (error) {
       console.log("[orders_GET]", error);
@@ -60,8 +69,17 @@ const Orders = () => {
     <Loader />
   ) : (
     <div className="px-10 py-5">
-      <p className="text-heading2-bold">Ordenes</p>
-      <Separator className="bg-grey-1 my-5" />
+      <div className="flex items-center justify-between">
+        <p className="text-heading2-bold">Ordenes Generales</p>
+        <Button
+          className="bg-blue-1 text-white"
+          onClick={() => router.push("/generalOrders/new")}
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Agregar nueva orden
+        </Button>
+      </div>
+      <Separator className="bg-grey-1 my-4" />
 
       <DataTable columns={columns} data={orders} searchKey="_id" />
 
@@ -77,6 +95,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
-
-export const dynamic = "force-dynamic";
+export default GeneralOrders;

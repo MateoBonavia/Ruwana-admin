@@ -22,6 +22,17 @@ type ProductType = {
   updatedAt: Date;
 };
 
+type GeneralOrderType = {
+  _id: string;
+  customer: string;
+  productsName: string;
+  color: string;
+  size: string;
+  products: number;
+  totalAmount: number;
+  createdAt: string;
+};
+
 type OrderColumnType = {
   _id: string;
   customer: string;
