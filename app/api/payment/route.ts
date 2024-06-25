@@ -23,7 +23,10 @@ export const POST = async (req: NextRequest) => {
       };
 
       // En un futuro mandar por metadata o mediante otro medio datos de envió ⬇
-      // const shippingAddress = {};
+      const shipping = {
+        shippingAddress: payment?.metadata.shippingAddress,
+        shippingComments: payment?.metadata.shippingComments,
+      };
 
       // Guardamos el ID de la orden ⬇
       const orderId = payment?.id;
@@ -42,7 +45,7 @@ export const POST = async (req: NextRequest) => {
       const newOrder = new Order({
         customerClerkId: customerInfo.clerkId,
         products: orderItems,
-        // shippingAddress: {},
+        shipping: shipping,
         totalAmount: payment?.transaction_amount,
       });
 
