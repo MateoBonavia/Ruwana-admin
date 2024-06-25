@@ -23,14 +23,13 @@ export const POST = async (req: NextRequest) => {
       };
 
       // En un futuro mandar por metadata o mediante otro medio datos de envió ⬇
-      const shippingAddress = payment?.metadata.shippingAddress;
-      const shippingComments = payment?.metadata.shippingComments;
+      const shippingAddress = payment?.metadata.shipping_address;
+      const shippingComments = payment?.metadata.shipping_comments;
 
       // Guardamos el ID de la orden ⬇
       const orderId = payment?.id;
 
       // Guardamos los datos el/los producto/s ⬇
-      console.log(payment?.metadata.products[0].product_id);
       const orderItems = payment?.metadata.products.map((product: any) => ({
         product: product.product_id,
         color: product.color || "N/A",
