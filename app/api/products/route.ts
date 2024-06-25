@@ -72,13 +72,10 @@ export const POST = async (req: NextRequest) => {
 export const GET = async (req: NextRequest) => {
   try {
     await connectToDB();
-    console.log("Connected to DB");
 
     const products = await Product.find()
       .sort({ createdAt: "desc" })
       .populate({ path: "collections", model: Collection });
-
-    console.log("Fetched products:", products);
 
     return NextResponse.json(products, { status: 200 });
   } catch (err) {

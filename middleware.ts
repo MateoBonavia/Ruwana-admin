@@ -1,6 +1,11 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-const isProtectedRoute = createRouteMatcher(["/((?!api).*)", "/(.*)"]);
+const isProtectedRoute = createRouteMatcher([
+  "/((?!api).*)",
+  "/",
+  "/(api/trpc)(.*)",
+  "/api/products/(.*)",
+]);
 
 export default clerkMiddleware((auth, req) => {
   if (isProtectedRoute(req)) auth().protect();
@@ -8,8 +13,8 @@ export default clerkMiddleware((auth, req) => {
 
 export const config = {
   matcher: [
-    "/((?!api).*)", // Excluir la ruta /api de la protección
+    "/((?!api).*)",
     "/",
-    "/(api/trpc)(.*)",
+    "/api(.*)", // Añade la ruta específica si está bajo /api
   ],
 };
