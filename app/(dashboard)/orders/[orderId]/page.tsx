@@ -43,14 +43,14 @@ const OrderDetails = ({ params }: { params: { orderId: string } }) => {
         <span className="text-base-medium">${orderDetails.totalAmount}</span>
       </p>
       <p className="text-base-bold">
-        Envió:
+        Envió:{" "}
         <span className="text-base-medium">{orderDetails.shippingAddress}</span>
       </p>
       {orderDetails.shippingComments && (
         <p className="text-base-bold">
-          Comentarios:
+          Comentarios:{" "}
           <span className="text-base-medium">
-            ${orderDetails.shippingComments}
+            {orderDetails.shippingComments}
           </span>
         </p>
       )}
