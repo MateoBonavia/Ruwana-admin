@@ -2,6 +2,16 @@ import Product from "@/lib/models/Product";
 import { connectToDB } from "@/lib/mongoDB";
 import { NextResponse, NextRequest } from "next/server";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export const GET = async (
   req: NextRequest,
   { params }: { params: { productId: string } }
@@ -14,7 +24,7 @@ export const GET = async (
     if (!product) {
       return new NextResponse(
         JSON.stringify({ message: "Producto no encontrado" }),
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
@@ -32,14 +42,20 @@ export const GET = async (
     if (!relatedProducts.length) {
       return new NextResponse(
         JSON.stringify({ message: "No se encontraron productos relacionados" }),
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
-    return NextResponse.json(relatedProducts, { status: 200 });
+    return NextResponse.json(relatedProducts, {
+      status: 200,
+      headers: corsHeaders,
+    });
   } catch (error) {
     console.log("[related_GET]", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse("Internal Server Error", {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 };
 

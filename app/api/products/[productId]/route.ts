@@ -10,6 +10,10 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export const GET = async (
   req: NextRequest,
   { params }: { params: { productId: string } }
@@ -25,14 +29,17 @@ export const GET = async (
     if (!product) {
       return new NextResponse(
         JSON.stringify({ message: "Producto no encontrado" }),
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
     return NextResponse.json(product, { status: 200, headers: corsHeaders });
   } catch (error) {
     console.log("[productId_GET]", error);
-    return new NextResponse("Internal error", { status: 500 });
+    return new NextResponse("Internal error", {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 };
 
@@ -44,7 +51,10 @@ export const POST = async (
     const { userId } = auth();
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse("Unauthorized", {
+        status: 401,
+        headers: corsHeaders,
+      });
     }
 
     await connectToDB();
@@ -135,10 +145,16 @@ export const POST = async (
 
     await updateProduct.save();
 
-    return NextResponse.json(updateProduct, { status: 200 });
+    return NextResponse.json(updateProduct, {
+      status: 200,
+      headers: corsHeaders,
+    });
   } catch (error) {
     console.log("[productId_POST]", error);
-    return new NextResponse("Internal error", { status: 500 });
+    return new NextResponse("Internal error", {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 };
 
@@ -150,7 +166,10 @@ export const DELETE = async (
     const { userId } = auth();
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse("Unauthorized", {
+        status: 401,
+        headers: corsHeaders,
+      });
     }
 
     await connectToDB();
@@ -160,7 +179,7 @@ export const DELETE = async (
     if (!product) {
       return new NextResponse(
         JSON.stringify({ message: "Producto no encontrado" }),
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
@@ -177,10 +196,14 @@ export const DELETE = async (
 
     return new NextResponse(JSON.stringify({ message: "Producto eliminado" }), {
       status: 200,
+      headers: corsHeaders,
     });
   } catch (error) {
     console.log("[productId_DELETE]", error);
-    return new NextResponse("Internal error", { status: 500 });
+    return new NextResponse("Internal error", {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 };
 

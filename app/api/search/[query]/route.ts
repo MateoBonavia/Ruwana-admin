@@ -2,6 +2,16 @@ import Product from "@/lib/models/Product";
 import { connectToDB } from "@/lib/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export const GET = async (
   req: NextRequest,
   { params }: { params: { query: string } }
@@ -21,10 +31,16 @@ export const GET = async (
       ],
     });
 
-    return NextResponse.json(searchedProducts, { status: 200 });
+    return NextResponse.json(searchedProducts, {
+      status: 200,
+      headers: corsHeaders,
+    });
   } catch (error) {
     console.log("[search_GET]", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse("Internal Server Error", {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 };
 

@@ -4,10 +4,11 @@ const isProtectedRoute = createRouteMatcher([
   "/((?!api).*)",
   "/",
   "/(api/trpc)(.*)",
-  "/api/products/(.*)",
+  // "/api/products/(.*)",
 ]);
 
 export default clerkMiddleware((auth, req) => {
+  console.log("middleware.ts: isProtectedRoute", isProtectedRoute(req));
   if (isProtectedRoute(req)) auth().protect();
 });
 

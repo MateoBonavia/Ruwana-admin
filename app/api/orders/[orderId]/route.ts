@@ -4,6 +4,16 @@ import Product from "@/lib/models/Product";
 import { connectToDB } from "@/lib/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export const GET = async (
   req: NextRequest,
   { params }: { params: { orderId: String } }
@@ -21,6 +31,7 @@ export const GET = async (
     if (!orderDetails) {
       return new NextResponse(JSON.stringify({ message: "Order Not Found" }), {
         status: 404,
+        headers: corsHeaders,
       });
     }
 
@@ -28,10 +39,16 @@ export const GET = async (
       clerkId: orderDetails.customerClerkId,
     });
 
-    return NextResponse.json({ orderDetails, customer }, { status: 200 });
+    return NextResponse.json(
+      { orderDetails, customer },
+      { status: 200, headers: corsHeaders }
+    );
   } catch (err) {
     console.log("[orderId_GET]", err);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse("Internal Server Error", {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 };
 

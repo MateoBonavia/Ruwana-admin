@@ -4,6 +4,16 @@ import { connectToDB } from "@/lib/mongoDB";
 import Collection from "@/lib/models/Collection";
 import Product from "@/lib/models/Product";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export const GET = async (
   req: NextRequest,
   { params }: { params: { collectionId: string } }
@@ -19,14 +29,17 @@ export const GET = async (
     if (!collection) {
       return new NextResponse(
         JSON.stringify({ message: "Collection not found" }),
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
-    return NextResponse.json(collection, { status: 200 });
+    return NextResponse.json(collection, { status: 200, headers: corsHeaders });
   } catch (error) {
     console.log("[collectionId_GET]", error);
-    return new NextResponse("Internal error", { status: 500 });
+    return new NextResponse("Internal error", {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 };
 
@@ -38,7 +51,10 @@ export const POST = async (
     const { userId } = auth();
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse("Unauthorized", {
+        status: 401,
+        headers: corsHeaders,
+      });
     }
 
     await connectToDB();
@@ -48,7 +64,7 @@ export const POST = async (
     if (!collection) {
       return new NextResponse(
         JSON.stringify({ message: "Collection not found" }),
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
@@ -57,6 +73,7 @@ export const POST = async (
     if (!title || !image) {
       return new NextResponse("Titulo e imagen son requeridos", {
         status: 400,
+        headers: corsHeaders,
       });
     }
 
@@ -68,10 +85,13 @@ export const POST = async (
 
     await collection.save();
 
-    return NextResponse.json(collection, { status: 200 });
+    return NextResponse.json(collection, { status: 200, headers: corsHeaders });
   } catch (error) {
     console.log("[collectionId_POST]", error);
-    return new NextResponse("Internal error", { status: 500 });
+    return new NextResponse("Internal error", {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 };
 
@@ -83,7 +103,10 @@ export const DELETE = async (
     const { userId } = auth();
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse("Unauthorized", {
+        status: 401,
+        headers: corsHeaders,
+      });
     }
 
     await connectToDB();
@@ -95,10 +118,16 @@ export const DELETE = async (
       { $pull: { collections: params.collectionId } }
     );
 
-    return new NextResponse("Colección eliminada", { status: 200 });
+    return new NextResponse("Colección eliminada", {
+      status: 200,
+      headers: corsHeaders,
+    });
   } catch (error) {
     console.log("[collectionId_DELETE]", error);
-    return new NextResponse("Internal error", { status: 500 });
+    return new NextResponse("Internal error", {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 };
 

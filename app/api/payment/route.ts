@@ -6,6 +6,16 @@ import { Payment } from "mercadopago";
 
 import { NextRequest, NextResponse } from "next/server";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export const POST = async (req: NextRequest) => {
   try {
     const body = await req
@@ -62,9 +72,12 @@ export const POST = async (req: NextRequest) => {
       await customer.save();
     }
 
-    return Response.json("Orden creada", { status: 200 });
+    return Response.json("Orden creada", { status: 200, headers: corsHeaders });
   } catch (error) {
     console.log("[payment_POST]", error);
-    return new NextResponse("Failed to create the order", { status: 500 });
+    return new NextResponse("Failed to create the order", {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 };

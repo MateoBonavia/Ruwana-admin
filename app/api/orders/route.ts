@@ -5,6 +5,16 @@ import { connectToDB } from "@/lib/mongoDB";
 import { NextRequest, NextResponse } from "next/server";
 import { format } from "date-fns";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export const GET = async (req: NextRequest) => {
   try {
     await connectToDB();
@@ -26,10 +36,16 @@ export const GET = async (req: NextRequest) => {
       })
     );
 
-    return NextResponse.json(orderDetails, { status: 200 });
+    return NextResponse.json(orderDetails, {
+      status: 200,
+      headers: corsHeaders,
+    });
   } catch (error) {
     console.log("[orders_GET]", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse("Internal Server Error", {
+      status: 500,
+      headers: corsHeaders,
+    });
   }
 };
 
